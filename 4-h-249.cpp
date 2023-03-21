@@ -1,19 +1,30 @@
 #include <iostream>
+#include <fstream>
+
+std::ifstream in;
+std::ofstream out;
 
 int main() {
-    unsigned n, m, k;
-    std::cin >> n;
-    unsigned* a = new unsigned[n];
+    in.open("in.txt", std::ios::in);
+    out.open("out.txt", std::ios::out);
+    unsigned n;
+    in >> n;
+    std::cout << n << std::endl;
+    int* a = new int[n];
     for (unsigned i = 0; i < n; i++)
-        std::cin >> a[i];
-    std::cin >> m;
-    unsigned* b = new unsigned[m];
+        in >> a[i];
+    unsigned m;
+    in >> m;
+    std::cout << m << std::endl;
+    int* b = new int[m];
     for (unsigned i = 0; i < m; i++)
-        std::cin >> b[i];
-    std::cin >> k;
-    unsigned* c = new unsigned[k];
+        in >> b[i];
+    unsigned k;
+    in >> k;
+    std::cout << k << std::endl;
+    int* c = new int[k];
     for (unsigned i = 0; i < k; i++)
-        std::cin >> c[i];
+        in >> c[i];
     for (unsigned i = 0; i < k; i++) {
         bool found = false;
         for (unsigned j = 0; j < n && !found; j++)
@@ -21,11 +32,13 @@ int main() {
                 if (a[j] + b[t] == c[i])
                     found = true;
         if (found)
-            std::cout << "YES";
+            out << "YES";
         else
-            std::cout << "NO";
-        std::cout << std::endl;
+            out << "NO";
+        out << std::endl;
     }
+    in.close();
+    out.close();
     delete[] a;
     delete[] b;
     delete[] c;

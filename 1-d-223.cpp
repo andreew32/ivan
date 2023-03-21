@@ -1,14 +1,20 @@
 #include <iostream>
+#include <fstream>
+
+std::ifstream in;
+std::ofstream out;
 
 int main()
 {
+    in.open("in.txt", std::ios::in);
+    out.open("out.txt", std::ios::out);
     unsigned n, k;
     int a, b, c, r;
-    std::cin >> n >> k;
-    k--; //
+    in >> n >> k;
+    k--;
     int* x = new int[n];
-    std::cin >> x[0] >> x[1];
-    std::cin >> a >> b >> c >> r;
+    in >> x[0] >> x[1];
+    in >> a >> b >> c >> r;
     for (unsigned i = 2; i < n; i++)
         x[i] = (a * x[i - 2] + b * x[i - 1] + c) % r;
     for (unsigned l = 0, j = n - 1; ; )
@@ -55,7 +61,9 @@ int main()
         if (t <= k)
             l = i;
     }
-    std::cout << x[k] << std::endl;
+    out << x[k] << std::endl;
+    in.close();
+    out.close();
     delete[] x;
     return 0;
 }

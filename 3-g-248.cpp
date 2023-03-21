@@ -1,5 +1,9 @@
 #include <iostream>
 #include <cmath>
+#include <fstream>
+
+std::ifstream in;
+std::ofstream out;
 
 #define _USE_MATH_DEFINES
 int glob = 0;
@@ -9,18 +13,18 @@ private:
     double r, a;
     int index;
     void debug() {
-        std::cout << x << " " << y << " "
+        out << x << " " << y << " "
                   << r << " " << a << " "
                   << index + 1 << std::endl;
     }
     static void debugar(Point arr[], int n) {
         for (int i = 0; i < n; i++) {
             arr[i].debug();
-            std::cout << std::endl;
+            out << std::endl;
         }
     }
     static int partition(Point arr[], int start, int end) {
-        std::cout << "glob " << glob << std::endl;
+        out << "glob " << glob << std::endl;
         glob++;
         Point pivot = Point(arr[start]);
         pivot.debug();
@@ -132,34 +136,38 @@ public:
     }
 };
 int main() {
+    in.open("in.txt", std::ios::in);
+    out.open("out.txt", std::ios::out);
     unsigned n;
-    std::cin >> n;
+    in >> n;
     Point* p = new Point[n];
     for (unsigned i = 0; i < n; i++) {
         int x, y;
-        std::cin >> x >> y;
+        in >> x >> y;
         p[i] = Point(x, y, i + 1);
     }
     for (unsigned i = 0; i < n; i++) {
-        std::cout << p[i].i() << " ";
+        out << p[i].i() << " ";
     }
-    std::cout << std::endl;
+    out << std::endl;
     Point center = Point::average(p, n);
     for (unsigned i = 0; i < n; i++) {
-        std::cout << p[i].i() << " ";
+        out << p[i].i() << " ";
     }
-    std::cout << std::endl;
+    out << std::endl;
     for (unsigned i = 0; i < n; i++)
         p[i].polarPoint(center);
     for (unsigned i = 0; i < n; i++) {
-        std::cout << p[i].i() << " ";
+        out << p[i].i() << " ";
     }
-    std::cout << std::endl;
+    out << std::endl;
     Point::sort(p, n);
     for (unsigned i = 0; i < n; i++) {
-        std::cout << p[i].i() << " ";
+        out << p[i].i() << " ";
     }
-    std::cout << std::endl;
+    out << std::endl;
+    in.close();
+    out.close();
     delete[] p;
     return 0;
 }
