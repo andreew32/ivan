@@ -2,16 +2,16 @@
 
 int main()
 {
-    unsigned n, k;
-    int a, b, c, r;
+    unsigned n, k; //создаем общие переменные
+    int a, b, c, r; //переменные генератора
     std::cin >> n >> k;
-    k--;
-    int* x = new int[n];
-    std::cin >> x[0] >> x[1];
-    std::cin >> a >> b >> c >> r;
-    for (unsigned i = 2; i < n; i++)
+    k--; //c++ считает от нуля, поэтому делаем сдвижку
+    int* x = new int[n]; //создаем массив
+    std::cin >> x[0] >> x[1]; //вводим первые значения массива
+    std::cin >> a >> b >> c >> r; //вводим данные генератора
+    for (unsigned i = 2; i < n; i++) //генерируем последовательность
         x[i] = (a * x[i - 2] + b * x[i - 1] + c) % r;
-    for (unsigned l = 0, j = n - 1; ; )
+    for (unsigned l = 0, j = n - 1; ; ) //основной цикл
     {
         if (j <= l + 1)
         {
@@ -55,7 +55,7 @@ int main()
         if (t <= k)
             l = i;
     }
-    std::cout << x[k] << std::endl;
-    delete[] x;
+    std::cout << x[k] << std::endl; //вывод ответа
+    delete[] x; //очищение памяти
     return 0;
 }
