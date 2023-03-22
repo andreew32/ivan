@@ -12,23 +12,10 @@ private:
     double x, y;
     double r, a;
     int index;
-    void debug() {
-        out << x << " " << y << " "
-                  << r << " " << a << " "
-                  << index + 1 << std::endl;
-    }
-    static void debugar(Point arr[], int n) {
-        for (int i = 0; i < n; i++) {
-            arr[i].debug();
-            out << std::endl;
-        }
-    }
     static int partition(Point arr[], int start, int end) {
         out << "glob " << glob << std::endl;
         glob++;
         Point pivot = Point(arr[start]);
-        pivot.debug();
-        arr[start].debug();
         int count = 0;
         for (int i = start + 1; i <= end; i++) {
             if (arr[i] <= pivot)
