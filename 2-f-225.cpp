@@ -1,18 +1,12 @@
 #include <iostream>
-#include <fstream>
-
-std::ifstream in;
-std::ofstream out;
 
 int main()
 {
-    in.open("in.txt", std::ios::in);
-    out.open("out.txt", std::ios::out);
     unsigned n, k;
-    in >> n >> k;
+    std::cin >> n >> k;
     unsigned* a = new unsigned[n];
     for (unsigned int i = 0; i < n; i++) {
-        in >> a[i];
+        std::cin >> a[i];
     }
     unsigned max = a[0];
     for (unsigned i = 1; i < n; i++)
@@ -28,9 +22,7 @@ int main()
         }
         else
             found = true;
-    out << z << std::endl;
-    in.close();
-    out.close();
+    std::cout << z << std::endl;
     delete[] a;
     return 0;
 }

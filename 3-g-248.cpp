@@ -1,9 +1,5 @@
 #include <iostream>
 #include <cmath>
-#include <fstream>
-
-std::ifstream in;
-std::ofstream out;
 
 #define _USE_MATH_DEFINES
 int glob = 0;
@@ -13,7 +9,7 @@ private:
     double r, a;
     int index;
     static int partition(Point arr[], int start, int end) {
-        out << "glob " << glob << std::endl;
+        std::cout << "glob " << glob << std::endl;
         glob++;
         Point pivot = Point(arr[start]);
         int count = 0;
@@ -123,38 +119,34 @@ public:
     }
 };
 int main() {
-    in.open("in.txt", std::ios::in);
-    out.open("out.txt", std::ios::out);
     unsigned n;
-    in >> n;
+    std::cin >> n;
     Point* p = new Point[n];
     for (unsigned i = 0; i < n; i++) {
         int x, y;
-        in >> x >> y;
+        std::cin >> x >> y;
         p[i] = Point(x, y, i + 1);
     }
     for (unsigned i = 0; i < n; i++) {
-        out << p[i].i() << " ";
+        std::cout << p[i].i() << " ";
     }
-    out << std::endl;
+    std::cout << std::endl;
     Point center = Point::average(p, n);
     for (unsigned i = 0; i < n; i++) {
-        out << p[i].i() << " ";
+        std::cout << p[i].i() << " ";
     }
-    out << std::endl;
+    std::cout << std::endl;
     for (unsigned i = 0; i < n; i++)
         p[i].polarPoint(center);
     for (unsigned i = 0; i < n; i++) {
-        out << p[i].i() << " ";
+        std::cout << p[i].i() << " ";
     }
-    out << std::endl;
+    std::cout << std::endl;
     Point::sort(p, n);
     for (unsigned i = 0; i < n; i++) {
-        out << p[i].i() << " ";
+        std::cout << p[i].i() << " ";
     }
-    out << std::endl;
-    in.close();
-    out.close();
+    std::cout << std::endl;
     delete[] p;
     return 0;
 }
