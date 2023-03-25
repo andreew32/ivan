@@ -4,6 +4,7 @@
 class Vect
 {
 private:
+    bool allocated;
     int32_t* a;
     static uint16_t partition(int32_t arr[], uint16_t start, uint16_t end)
     {
@@ -61,15 +62,28 @@ public:
     int32_t& operator[](uint16_t i) {return a[i];}
     void allocate() {
         a = new int32_t[l];
+        allocated = true;
     }
-    Vect() {}
-    ~Vect() {delete[] a;}
+    Vect() {
+        allocated = false;
+    }
+    ~Vect() {
+        if (allocated)
+            delete[] a;
+    }
     sort() {quickSort(a, 0, l - 1);}
 };
 
 class LongVect
 {
-
+    Vect* v;
+    LongVect() {
+        v = new Vect[2];
+    }
+    ~LongVect() {
+        delete v[0];
+        delete v[1];
+    }
 };
 
 int main() {
