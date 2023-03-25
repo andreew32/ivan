@@ -8,21 +8,25 @@ int main()
     for (unsigned int i = 0; i < n; i++) {
         std::cin >> a[i];
     }
-    unsigned max = a[0]; //поиск максимальной катушки
+    unsigned max = 0; //поиск максимальной катушки
     for (unsigned i = 1; i < n; i++)
-        if (a[i] > max)
-            max = a[i]; //j будет равняться самой большой катушке
-    unsigned z; //переменная для хранения ответа
+        if (a[i] > a[max])
+            max = i; //j будет равняться самой большой катушке
     bool found = false; //цикл поиска остановится при значении true
-    for (unsigned j = max, p = 0; !found; j--, p = 0)
-        if (p < k && j > 0) { //уменьшаем j пока p меньше числа катушек
-            z = j; //сохраняем j в ответ
-            for (unsigned i = 0; i < n; i++)
-                p += a[i] / j; //наращиваем p на частное катушки и j
+    unsigned len = a[max]; //длина нитки
+    do
+    {
+        unsigned sum = 0; //количество отрезков
+        for (unsigned t = 0; t < n; t++)
+        {
+            sum += a[t] / len; //получаем отрезки ниток с каждой катушки
         }
-        else //выходим из цикла, если p оказалось больше числа нитей
-            found = true; //если j дошло до 0
-    std::cout << z << std::endl; //вывод ответа
+        if (sum >= k) //как только число отрезков достаточно, выходим
+            found = true;
+        else
+            len--; //иначе укорачиваем отрезок
+    } while (!found && len > 0); //если длина отрезка ноль, то тоже выходим
+    std::cout << len << std::endl; //вывод ответа
     delete[] a; //очистка памяти
     return 0;
 }
