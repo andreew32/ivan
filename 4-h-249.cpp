@@ -69,34 +69,35 @@ public:
     }
     ~Vect() {
         if (allocated)
-            delete[] a;
+            delete[] this->a;
     }
-    sort() {quickSort(a, 0, l - 1);}
-    Vect sum(Vect& v1, Vect& v2)
+    void sort() {quickSort(this->a, 0, l - 1);}
+    //выделить место и заполнить массив сумм двух массивов, отсортировать
+    static Vect* sum(Vect* v1, Vect* v2)
     {
-        Vect s = new Vect();
-        s.l = a.l * b.l;
-        s.allocate();
-        for (uint16_t i = 0, sumi = 0; i < v1.l; i++) //берем элемент a
+        Vect* s = new Vect();
+        s->l = v1->l * v2->l;
+        s->allocate();
+        for (uint16_t i = 0, sumi = 0; i < v1->l; i++) //берем элемент a
         {
-            for (uint16_t j = 0; j < v2.l; j++, sumi++) //взять b и пройти sumi
-            {
-                s[sumi] = a[i] + b[i];
-            }
+            for (uint16_t j = 0; j < v2->l; j++, sumi++) //пройти b и sumi
+                (*s)[sumi] = (*v1)[i] + (*v2)[i];
         }
-        s.sort();
+        s->sort(); //отсортировать массив сумм
         return s;
     }
-    void find(Vect& v2, bool r[]) //найти в массиве числа из b и записать в r
+    void find(Vect* v2, bool r[]) //найти в массиве числа из b и записать в r
     {
         for (uint16_t i = 0; i < this->l; i++)
             if (!r[i]) //ищем элемент из this в b, если он еще не был найден
-                r[i] = v2.binarySearch(this->a[i]);
+                r[i] = v2->binarySearch(this->a[i]);
     }
-    static void findInSum(Vect& v1, Vect& v2, bool r[])
+
+    //найти числа v3 среди сумм массивов v1 и v2 и записать ответы в found
+    static void findInSum(Vect* v1, Vect* v2, Vect* v3, bool found[])
     {
-        Vect s = sum(v1, v2);
-        c.find(s, found); //с ищет в себе элементы совпадающие с sum
+        Vect* s = sum(v1, v2);
+        v3->find(s, found); //с ищет в себе элементы совпадающие с sum
         delete s;
     }
     bool binarySearch(int32_t n)
@@ -122,56 +123,55 @@ public:
 const uint16_t maxn = 5000; //максимум элементов во втором массиве
 
 int main() {
-    Vect a = new Vect(); //создание массивов
-    Vect b = new Vect();
-    Vect d = new Vect();
-    Vect c = new Vect();
-    Vect sum;
+    Vect* a = new Vect(); //создание массивов
+    Vect* b = new Vect();
+    Vect* d = new Vect();
+    Vect* c = new Vect();
     bool longb = false;
 
     //ввод массивов
 
-    std::cin >> a.l;
-    a.allocate();
-    for (uint16_t i = 0; i < a.l; i++)
-        std::cin >> a[i];
+    std::cin >> a->l;
+    a->allocate();
+    for (uint16_t i = 0; i < a->l; i++)
+        std::cin >> (*a)[i];
 
-    std::cin >> b[0].l;
-    b[0].allocate();
-    for (uint16_t i = 0; i < b.l; i++)
-        std::cin >> b[i];
+    std::cin >> b->l;
+    b->allocate();
+    for (uint16_t i = 0; i < b->l; i++)
+        std::cin >> (*b)[i];
 
-    std::cin >> c.l;
-    c.allocate();
-    for (uint16_t i = 0; i < c.l; i++)
-        std::cin >> c[i];
+    std::cin >> c->l;
+    c->allocate();
+    for (uint16_t i = 0; i < c->l; i++)
+        std::cin >> (*c)[i];
 
-    bool* found = bool[c.l]; //массив с ответами
-    for (uint16_t i = 0; i < c.l; i++)
+    bool* found = new bool[c->l]; //массив с ответами
+    for (uint16_t i = 0; i < c->l; i++)
         found[i] = false;
 
     //обработка
 
-    if (a.l > maxn) //если в a оказался длинный массив, назвать его вторым (b)
+    if (a->l > maxn) //если в a оказался длинный массив, назвать его вторым (b)
     {
-        Vect z = a;
+        Vect* z = a;
         a = b;
         b = z;
     }
 
-    if (b.l > maxn) //если в b длинный массив, то разбить его
+    if (b->l > maxn) //если в b длинный массив, то разбить его
     {
         longb = true;
-        d.l = b.l - maxn;
-        b.l = maxn;
-        d.a = b.a + maxn * 4;
+        d->l = b->l - maxn;
+        b->l = maxn;
+        d->a = b->a + maxn * 4;
     }
 
     //в первом проходе работаем только с первой частью b, а не с d
-    Vect::findInSum(a, b, found);
-    if (longb)
+    Vect::findInSum(a, b, c, found);
+    if (longb) //если b оказался длинным, то делаем второй проход
     {
-        Vect::findInSum(a, d, found);
+        Vect::findInSum(a, d, c, found);
     }
 
     delete a; //удаляем все три массива из памяти
