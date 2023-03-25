@@ -1,5 +1,56 @@
 #include <iostream>
 
+//для функции быстрой сортировки функция деления
+int partition(int arr[], int start, int end) {
+    int pivot = arr[start];
+    int count = 0;
+    for (int i = start + 1; i <= end; i++) {
+        if (arr[i] <= pivot)
+            count++;
+    }
+
+    //задаем осевому элементу его правильную позицию
+    int pivotIndex = start + count;
+    std::swap(arr[pivotIndex], arr[start]);
+
+    //сортируем по левую и по правую сторону от осевого элемента
+    int i = start, j = end;
+
+    while (i < pivotIndex && j > pivotIndex) {
+
+        while (arr[i] <= pivot) {
+            i++;
+        }
+
+        while (arr[j] > pivot) {
+            j--;
+        }
+
+        if (i < pivotIndex && j > pivotIndex) {
+            std::swap(arr[i++], arr[j--]);
+        }
+    }
+
+    return pivotIndex;
+}
+//функция быстрой сортировки
+void quickSort(int arr[], int start, int end)
+{
+
+    //базовый случай
+    if (start >= end)
+        return; //сразу выходим из сортировки
+
+    //разбиваем массив
+    int p = partition(arr, start, end);
+
+    //сортируем левую часть
+    quickSort(arr, start, p - 1);
+
+    //сортируем правую часть
+    quickSort(arr, p + 1, end);
+}
+
 int main()
 {
     unsigned n, k; //создаем общие переменные
@@ -11,50 +62,7 @@ int main()
     std::cin >> a >> b >> c >> r; //вводим данные генератора
     for (unsigned i = 2; i < n; i++) //генерируем последовательность
         x[i] = (a * x[i - 2] + b * x[i - 1] + c) % r;
-    for (unsigned l = 0, j = n - 1; ; ) //основной цикл
-    {
-        if (j <= l + 1)
-        {
-            // текущая часть состоит из 1 или 2 элементов -
-            // легко можем найти ответ
-            if (j == l + 1 && x[j] < x[l])
-                std::swap(x[l], x[j]);
-            //return x[k];
-            break;
-        }
-        //упорядочиваем a[l], a[l + 1], a[j]
-        unsigned mid = (l + j) >> 1;
-        std::swap(x[mid], x[l + 1]);
-        if (x[l] > x[j])
-            std::swap(x[l], x[j]);
-        if (x[l + 1] > x[j])
-            std::swap(x[l + 1], x[j]);
-        if (x[l] > x[l + 1])
-            std::swap(x[l], x[l + 1]);
-
-        // выполняем разделение
-        // по границе x[l + 1] - медиане от x[l], x[l + 1], x[j]
-        unsigned i = l + 1, t = j;
-        const int cur = x[l + 1];
-        for (;;)
-        {
-            while (x[++i] < cur);
-            while (x[--t] > cur);
-            if (i > t)
-                break;
-            std::swap(x[i], x[t]);
-        }
-
-        // вставляем раздел
-        x[l + 1] = x[t];
-        x[t] = cur;
-
-        // продолжаем искать в том месте, в котором должна быть k-я пор. стат.
-        if (t >= k)
-            j = t - 1;
-        if (t <= k)
-            l = i;
-    }
+    quickSort(x, 0, n - 1); //сортируем
     std::cout << x[k] << std::endl; //вывод ответа
     delete[] x; //очищение памяти
     return 0;
