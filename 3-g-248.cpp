@@ -1,8 +1,7 @@
 #include <iostream>
 #include <cmath>
 
-//чтобы пользоваться числом Pi
-#define _USE_MATH_DEFINES
+const double pi = 3.14159265358979323846;
 
 //класс точки
 class Point {
@@ -68,9 +67,9 @@ private:
         return p1.a > p2.a;
     }
     //метод вызывается несколькими конструкторами
-    void init(double x, double y) {
-        this->x = x;
-        this->y = y;
+    void init(double px, double py) {
+        this->x = px;
+        this->y = py;
     }
 public:
     //создание копии существующей точки
@@ -86,8 +85,8 @@ public:
         init(x, y);
     }
     //создание точки с координатами и порядковым номером
-    Point(double x, double y, unsigned i) {
-        init(x, y);
+    Point(double px, double py, unsigned i) {
+        init(px, py);
         this->index = i;
     }
     //заглушка конструктора
@@ -99,19 +98,19 @@ public:
         r = sqrt(x * x + y * y);
         a = atan2(y,x);
         if (a < 0) //если отрицательный угол, то переводим в положительный
-            a += 2 * M_PI;
+            a += 2 * pi;
     }
     //вывод координат в две заданные переменные
-    void get(double& x, double& y) {
-        x = this->x;
-        y = this->y;
+    void get(double& px, double& py) {
+        px = this->x;
+        py = this->y;
     }
     //сортировка быстрой сортировкой по углу
     static void sort(Point vec[], int n) {
         quickSort(vec, 0, n - 1);
     }
     //нахождение геометрического центра совокупности заданных точек
-    static Point average(Point vec[], int n) {
+    static Point average(Point vec[], unsigned n) {
         double xs = 0, ys = 0;
         for (unsigned i = 0; i < n; i++) {
             double x, y;
