@@ -81,7 +81,7 @@ public:
         this->index = p.index;
     }
     //создание точки с координатами без порядкового номера
-    Point(double x, double y) {
+    Point(double px, double py) {
         init(x, y);
     }
     //создание точки с координатами и порядковым номером
