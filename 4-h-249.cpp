@@ -74,18 +74,6 @@ public:
     sort() {quickSort(a, 0, l - 1);}
 };
 
-class LongVect
-{
-    Vect* v;
-    LongVect() {
-        v = new Vect[2];
-    }
-    ~LongVect() {
-        delete v[0];
-        delete v[1];
-    }
-};
-
 int main() {
     Vect a = new Vect(); //создание массивов
     Vect* b = new Vect[2];
