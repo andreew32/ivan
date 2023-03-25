@@ -1,25 +1,29 @@
 #include <iostream>
 #include <cstdint>
+#include <fstream>
+
+std::ifstream in;
+std::ofstream out;
 
 class Vect
 {
 private:
     bool allocated;
-    static uint16_t partition(int32_t arr[], uint16_t start, uint16_t end)
+    static uint32_t partition(int32_t arr[], uint32_t start, uint32_t end)
     {
         int32_t pivot = arr[start];
-        uint16_t count = 0;
-        for (uint16_t i = start + 1; i <= end; i++) {
+        uint32_t count = 0;
+        for (uint32_t i = start + 1; i <= end; i++) {
             if (arr[i] <= pivot)
                 count++;
         }
 
         //задаем осевому элементу его правильную позицию
-        uint16_t pivotIndex = start + count;
+        uint32_t pivotIndex = start + count;
         std::swap(arr[pivotIndex], arr[start]);
 
         //сортируем по левую и по правую сторону от осевого элемента
-        uint16_t i = start, j = end;
+        uint32_t i = start, j = end;
 
         while (i < pivotIndex && j > pivotIndex)
         {
@@ -40,7 +44,7 @@ private:
     }
 
     //функция быстрой сортировки
-    static void quickSort(int32_t arr[], uint16_t start, uint16_t end)
+    static void quickSort(int32_t arr[], uint32_t start, uint32_t end)
     {
 
         //базовый случай
@@ -48,7 +52,7 @@ private:
             return; //сразу выходим из сортировки
 
         //разбиваем массив
-        uint16_t p = partition(arr, start, end);
+        uint32_t p = partition(arr, start, end);
 
         //сортируем левую часть
         quickSort(arr, start, p - 1);
@@ -57,9 +61,9 @@ private:
         quickSort(arr, p + 1, end);
     }
 public:
-    uint16_t l;
+    uint32_t l;
     int32_t* a;
-    int32_t& operator[](uint16_t i) {return a[i];}
+    int32_t& operator[](uint32_t i) {return a[i];}
     void allocate() {
         a = new int32_t[l];
         allocated = true;
@@ -78,17 +82,18 @@ public:
         Vect* s = new Vect();
         s->l = v1->l * v2->l;
         s->allocate();
-        for (uint16_t i = 0, sumi = 0; i < v1->l; i++) //берем элемент a
+        for (uint32_t i = 0, sumi = 0; i < v1->l; i++) //берем элемент v1
         {
-            for (uint16_t j = 0; j < v2->l; j++, sumi++) //пройти b и sumi
-                (*s)[sumi] = (*v1)[i] + (*v2)[i];
+
+            for (uint32_t j = 0; j < v2->l; j++, sumi++) //пройти v2 и sumi
+                (*s)[sumi] = (*v1)[i] + (*v2)[j];
         }
         s->sort(); //отсортировать массив сумм
         return s;
     }
     void find(Vect* v2, bool r[]) //найти в массиве числа из b и записать в r
     {
-        for (uint16_t i = 0; i < this->l; i++)
+        for (uint32_t i = 0; i < this->l; i++)
             if (!r[i]) //ищем элемент из this в b, если он еще не был найден
                 r[i] = v2->binarySearch(this->a[i]);
     }
@@ -103,8 +108,8 @@ public:
     bool binarySearch(int32_t n)
     {
         bool found = false;
-        uint16_t step = this->l / 2;
-        for (uint16_t index = step; step > 0 && !found;)
+        uint32_t step = this->l / 2;
+        for (uint32_t index = step; step > 0 && !found;)
         {
             step /= 2;
             if (this->a[index] > n)
@@ -120,9 +125,12 @@ public:
 };
 
 
-const uint16_t maxn = 5000; //максимум элементов во втором массиве
+const uint32_t maxn = 5000; //максимум элементов во втором массиве
 
 int main() {
+    out.open("bin/out.txt", std::ios::out);
+    in.open("bin/generated.txt", std::ios::in);
+
     Vect* a = new Vect(); //создание массивов
     Vect* b = new Vect();
     Vect* d = new Vect();
@@ -131,24 +139,25 @@ int main() {
 
     //ввод массивов
 
-    std::cin >> a->l;
+    in >> a->l;
     a->allocate();
-    for (uint16_t i = 0; i < a->l; i++)
-        std::cin >> (*a)[i];
+    for (uint32_t i = 0; i < a->l; i++)
+        in >> (*a)[i];
 
-    std::cin >> b->l;
+    in >> b->l;
     b->allocate();
-    for (uint16_t i = 0; i < b->l; i++)
-        std::cin >> (*b)[i];
+    for (uint32_t i = 0; i < b->l; i++)
+        in >> (*b)[i];
 
-    std::cin >> c->l;
+    in >> c->l;
     c->allocate();
-    for (uint16_t i = 0; i < c->l; i++)
-        std::cin >> (*c)[i];
+    for (uint32_t i = 0; i < c->l; i++)
+        in >> (*c)[i];
 
     bool* found = new bool[c->l]; //массив с ответами
-    for (uint16_t i = 0; i < c->l; i++)
+    for (uint32_t i = 0; i < c->l; i++)
         found[i] = false;
+
 
     //обработка
 
@@ -174,10 +183,19 @@ int main() {
         Vect::findInSum(a, d, c, found);
     }
 
+    for (uint32_t i = 0; i < c->l; i++)
+    {
+        if (found[i])
+            out << "YES" << std::endl;
+        else
+            out << "NO" << std::endl;
+    }
     delete a; //удаляем все три массива из памяти
     delete b;
     delete d;
     delete c;
     delete[] found;
+    out.close();
+    in.close();
     return 0;
 }
